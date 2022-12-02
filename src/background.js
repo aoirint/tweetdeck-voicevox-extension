@@ -107,6 +107,7 @@ function consumeTextQueue() {
 
   fetch(audioQueryUrl, {
     method: 'POST',
+    mode: 'no-cors',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -118,6 +119,7 @@ function consumeTextQueue() {
 
     fetch(synthesisUrl, {
       method: 'POST',
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'audio/wav',
