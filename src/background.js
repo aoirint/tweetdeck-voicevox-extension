@@ -34,7 +34,7 @@ chrome.declarativeNetRequest.updateDynamicRules({
       },
       condition: {
         urlFilter: '127.0.0.1:50021/*',
-        initiatorDomains: ['efjjflielakkkmlcepmgdeijagilmbac'], // chrome-extension://efjjflielakkkmlcepmgdeijagilmbac
+        initiatorDomains: [chrome.runtime.id], // chrome-extension://{extension_id}
       },
     },
   ],
