@@ -9,9 +9,7 @@
   "permissions": [
     "activeTab",
     "tabs",
-    "declarativeNetRequest",
     "declarativeNetRequestWithHostAccess",
-    "declarativeNetRequestFeedback",
     "scripting"
   ],
   "host_permissions": [
