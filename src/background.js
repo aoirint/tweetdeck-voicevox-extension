@@ -80,11 +80,23 @@ function consumeTweetQueue() {
       const reader = new FileReader()
       reader.onload = (event) => {
         const audioDataUrl = event.target.result
+        const audioUrl = chrome.runtime.getURL('src/audio.html')
 
         // TODO: play audio with blob
-        chrome.tabs.sendMessage(currentTabId, {
-          method: 'play-audio-data-url',
-          audioDataUrl,
+        chrome.windows.create({
+          type: 'popup',
+          top: 1,
+          left: 1,
+          height: 1,
+          width: 1,
+          url: audioUrl,
+        }, (win) => {
+          chrome.tabs.query({ windowId: win.id, active: true }, ([activeTab]) => {
+            chrome.tabs.sendMessage(activeTab.id, {
+              method: 'play-audio-data-url',
+              audioDataUrl,
+            })
+          })
         })
       }
       reader.readAsDataURL(blob)

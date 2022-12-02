@@ -80,14 +80,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     clearInterval(columnWatchIntervalId)
     watchingColumnIndex = null
     columnWatchIntervalId = null
-  } else if (method === 'play-audio-data-url') {
-    const { audioDataUrl } = message
-
-    const audioElement = document.createElement('audio')
-    audioElement.src = audioDataUrl
-
-    document.body.appendChild(audioElement)
-    audioElement.play()
-    document.body.removeChild(audioElement)
   }
 })
