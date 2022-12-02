@@ -41,10 +41,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.windows.create({
       type: 'popup',
       focused: true,
-      top: 1,
-      left: 1,
-      height: 1,
-      width: 1,
+      width: 400,
+      height: 400,
       url: audioUrl,
     }, (win) => {
       audioWindowId = win.id
