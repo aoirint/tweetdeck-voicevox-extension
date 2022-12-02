@@ -18,6 +18,28 @@ chrome.runtime.onInstalled.addListener(() => {
 let audioWindowId = null
 let audioTabId = null
 
+chrome.webRequest.onBeforeSendHeaders.addListener((details) => {
+  console.log(details)
+  if (details.initiator === `chrome-extension://${chrome.runtime.id}`)  {
+    for (let index=0; index<details.requestHeaders.length; index++) {
+      if (details.requestHeaders[index].name.toLowerCase() === 'origin') {
+        console.log(`override origin header: ${details.requestHeaders[index].value}`)
+        details.requestHeaders[index].value = ''
+      }
+    }
+    details.requestHeaders.push({
+      name: 'X-Dummy-Header',
+      value: 'hey',
+    })
+  }
+
+  return {
+    requestHeaders: details.requestHeaders,
+  }
+}, {
+  urls: ['http://127.0.0.1:50021/*'],
+}, ['requestHeaders', 'extraHeaders'])
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { method } = message
   console.log(`received message ${method} in background`)
@@ -107,7 +129,6 @@ function consumeTextQueue() {
 
   fetch(audioQueryUrl, {
     method: 'POST',
-    mode: 'no-cors',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -119,7 +140,6 @@ function consumeTextQueue() {
 
     fetch(synthesisUrl, {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'audio/wav',

@@ -9,7 +9,11 @@
   "permissions": [
     "activeTab",
     "tabs",
+    "webRequest",
     "scripting"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:50021/*"
   ],
   "background": {
     "service_worker": "src/background.js"
