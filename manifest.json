@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "tweetdeck-voicevox-extension",
+  "version": "0.1.0",
+  "description": "TweetDeckのカラムに流れるツイートをVOICEVOXに読み上げさせるChrome拡張機能",
+  "icons": {
+    "128": "assets/icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "action": {
+    "default_popup": "src/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://tweetdeck.twitter.com/**"
+      ],
+      "all_frames": false,
+      "js": [ "src/content.js" ]
+    }
+  ]
+}
