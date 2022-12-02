@@ -9,12 +9,23 @@
   "permissions": [
     "activeTab",
     "tabs",
-    "webRequest",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequestFeedback",
     "scripting"
   ],
   "host_permissions": [
     "http://127.0.0.1:50021/*"
   ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules_1.json"
+      }
+    ]
+  },
   "background": {
     "service_worker": "src/background.js"
   },
