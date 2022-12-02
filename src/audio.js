@@ -2,7 +2,7 @@ console.log(`audio script loaded: ${location.href}`)
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { method } = message
-  console.log(`received message ${method}`)
+  console.log(`received message ${method} in audio`)
 
   if (method === 'play-audio-data-url') {
     const { audioDataUrl } = message

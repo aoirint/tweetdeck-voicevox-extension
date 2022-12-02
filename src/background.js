@@ -85,13 +85,15 @@ function consumeTweetQueue() {
         // TODO: play audio with blob
         chrome.windows.create({
           type: 'popup',
+          focused: true,
           top: 1,
           left: 1,
           height: 1,
           width: 1,
           url: audioUrl,
         }, (win) => {
-          chrome.tabs.query({ windowId: win.id, active: true }, ([activeTab]) => {
+          chrome.tabs.query({ windowId: win.tabId, active: true }, ([activeTab]) => {
+            console.log(`audio tab id: ${activeTab.id}`)
             chrome.tabs.sendMessage(activeTab.id, {
               method: 'play-audio-data-url',
               audioDataUrl,

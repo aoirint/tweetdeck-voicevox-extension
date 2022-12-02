@@ -5,7 +5,7 @@ let columnWatchIntervalId = null
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { method } = message
-  console.log(`received message ${method}`)
+  console.log(`received message ${method} in content`)
 
   if (method === 'fetch-tweetdeck-columns') {
     const columnElements = [...document.querySelectorAll('#container > div > section')]
