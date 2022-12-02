@@ -1,14 +1,9 @@
 let knownTweetIdQueueSize = 100
 let knownTweetIdQueue = []
 let textQueue = []
+let tweetdeckTabId = null
 
 chrome.runtime.onInstalled.addListener(() => {
-})
-
-let currentTabId = null
-
-chrome.action.onClicked.addListener((tab) => {
-  currentTabId = tab.id
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -18,6 +13,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (method === 'send-tweets') {
     const { tweets } = message
     const tabId = sender.tab.id
+    tweetdeckTabId = tabId
     // console.log(tweets)
 
     for (const tweet of tweets) {
@@ -80,9 +76,10 @@ function consumeTweetQueue() {
       const reader = new FileReader()
       reader.onload = (event) => {
         const audioDataUrl = event.target.result
+        console.log(tweetdeckTabId)
 
         // TODO: play audio with blob
-        chrome.tabs.sendMessage(currentTabId, {
+        chrome.tabs.sendMessage(tweetdeckTabId, {
           method: 'play-audio-data-url',
           audioDataUrl,
         })
