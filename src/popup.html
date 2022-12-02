@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<style>
+  html {
+    width: 800px;
+  }
 
+  #columnSelect {
+    width: 100%;
+    box-sizing: border-box;
+  }
+</style>
+
+<h4>1. TweetDeckのタブを開く</h4>
+
+<h4>2. 音声再生用ウインドウを開く</h4>
 <p>
-  <button id="startButton">
-    Start
-  </button>
-  <button id="stopButton">
-    Stop
+  <button id="audioButton">
+    音声再生用ウインドウを開く
   </button>
 </p>
 
+<h4>3. 読み上げするカラムを選択</h4>
 <p>
   <select id="columnSelect"></select>
 </p>
+
+<h4>4. 読み上げを開始</h4>
+<p>
+  <button id="startButton">
+    読み上げを開始
+  </button>
+</p>
+
+<h4>5. 読み上げを停止</h4>
+<p>
+  <button id="stopButton">
+    読み上げを停止
+  </button>
+</p>
+
 
 <script src="popup.js"></script>

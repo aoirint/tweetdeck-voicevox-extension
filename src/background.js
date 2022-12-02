@@ -5,11 +5,8 @@ let textQueue = []
 chrome.runtime.onInstalled.addListener(() => {
 })
 
-let currentTabId = null
-
-chrome.action.onClicked.addListener((tab) => {
-  currentTabId = tab.id
-})
+let audioWindowId = null
+let audioTabId = null
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { method } = message
@@ -38,9 +35,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     // console.log(tweetQueue)
-  }
+  } else if (method === 'open-audio-window') {
+    const audioUrl = chrome.runtime.getURL('src/audio.html')
 
-  return true
+    chrome.windows.create({
+      type: 'popup',
+      focused: true,
+      top: 1,
+      left: 1,
+      height: 1,
+      width: 1,
+      url: audioUrl,
+    }, (win) => {
+      audioWindowId = win.id
+      audioTabId = win.tabs[0].id
+    })
+  }
 })
 
 // tweetQueue consumer
@@ -80,25 +90,12 @@ function consumeTweetQueue() {
       const reader = new FileReader()
       reader.onload = (event) => {
         const audioDataUrl = event.target.result
-        const audioUrl = chrome.runtime.getURL('src/audio.html')
 
         // TODO: play audio with blob
-        chrome.windows.create({
-          type: 'popup',
-          focused: true,
-          top: 1,
-          left: 1,
-          height: 1,
-          width: 1,
-          url: audioUrl,
-        }, (win) => {
-          chrome.tabs.query({ windowId: win.tabId, active: true }, ([activeTab]) => {
-            console.log(`audio tab id: ${activeTab.id}`)
-            chrome.tabs.sendMessage(activeTab.id, {
-              method: 'play-audio-data-url',
-              audioDataUrl,
-            })
-          })
+        console.log(`audio tab id: ${audioTabId}`)
+        chrome.tabs.sendMessage(audioTabId, {
+          method: 'play-audio-data-url',
+          audioDataUrl,
         })
       }
       reader.readAsDataURL(blob)

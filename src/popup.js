@@ -55,3 +55,11 @@ stopButton.addEventListener('click', () => {
     })
   })
 })
+
+audioButton.addEventListener('click', () => {
+  console.log('audio button clicked')
+
+  chrome.runtime.sendMessage({
+    method: 'open-audio-window',
+  })
+})

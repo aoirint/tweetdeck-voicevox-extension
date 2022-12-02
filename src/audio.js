@@ -12,6 +12,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     document.body.appendChild(audioElement)
     audioElement.play()
-    document.body.removeChild(audioElement)
   }
 })
