@@ -3,8 +3,13 @@ let knownTweetIdQueue = []
 
 let textQueue = []
 
+let textGeneratingQueue = []
+
 let audioQueueSize = 10
 let audioQueue = []
+
+let audioPlayingQueue = []
+
 let waitingPlayEnded = false
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -34,7 +39,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
 
       const { displayName, tweetText } = tweet
-      const tweetTextShort = tweetText.substring(0, 25) // limit 25 chars
+
+      // limit 25 chars
+      const tweetTextShort = tweetText.length > 25 ? (tweetText.substring(0, 25) + ' 以下略') : tweetText
+
       const text = `${displayName}さん ${tweetTextShort}`
 
       textQueue.push({
@@ -61,11 +69,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       textQueue: textQueue.map(({ text }) => ({
         text,
       })),
+      textGeneratingQueue: textGeneratingQueue.map(({ text }) => ({
+        text,
+      })),
       audioQueue: audioQueue.map(({ text }) => ({
         text,
-      }))
+      })),
+      audioPlayingQueue: audioPlayingQueue.map(({ text }) => ({
+        text,
+      })),
     })
   } else if (method === 'ended-play-audio') {
+    audioPlayingQueue.shift()
     setTimeout(consumeAudioQueue, 100)
   }
 })
@@ -81,7 +96,10 @@ function consumeTextQueue() {
     return
   }
 
-  const { text } = textQueue.shift()
+  const textQueueItem = textQueue.shift()
+  textGeneratingQueue.push(textQueueItem)
+
+  const { text } = textQueueItem
 
   const audioQueryUrl = new URL('http://127.0.0.1:50021/audio_query')
   audioQueryUrl.searchParams.append('speaker', '1')
@@ -112,6 +130,7 @@ function consumeTextQueue() {
       reader.onload = (event) => {
         const audioDataUrl = event.target.result
 
+        textGeneratingQueue.shift()
         audioQueue.push({
           text,
           audioDataUrl,
@@ -135,7 +154,10 @@ function consumeAudioQueue() {
     return
   }
 
-  const { audioDataUrl } = audioQueue.shift()
+  const audioQueueItem = audioQueue.shift()
+  audioPlayingQueue.push(audioQueueItem)
+
+  const { audioDataUrl } = audioQueueItem
 
   waitingPlayEnded = true
   chrome.tabs.sendMessage(audioTabId, {

@@ -23,69 +23,142 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 setInterval(() => {
   chrome.runtime.sendMessage({
     method: 'fetch-queue',
-  }, ({ textQueue, audioQueue }) => {
+  }, ({ textQueue, textGeneratingQueue, audioQueue, audioPlayingQueue }) => {
     // update textQueueTable
-    while (textQueueTable.lastChild) {
-      textQueueTable.removeChild(textQueueTable.lastChild)
+    {
+      while (textQueueTable.lastChild) {
+        textQueueTable.removeChild(textQueueTable.lastChild)
+      }
+  
+      const headRowElement = document.createElement('tr')
+  
+      const headColumnNumberElement = document.createElement('th')
+      headColumnNumberElement.innerText = 'No'
+      headRowElement.appendChild(headColumnNumberElement)
+  
+      const headColumnTextElement = document.createElement('th')
+      headColumnTextElement.innerText = 'テキスト'
+      headRowElement.appendChild(headColumnTextElement)
+  
+      textQueueTable.appendChild(headRowElement)
+  
+      for (const textQueueIndex in textQueue) {
+        const { text } = textQueue[textQueueIndex]
+        const rowElement = document.createElement('tr')
+  
+        const columnNumberElement = document.createElement('th')
+        columnNumberElement.innerText = `${textQueueIndex}`
+        rowElement.appendChild(columnNumberElement)
+    
+        const columnTextElement = document.createElement('th')
+        columnTextElement.innerText = `${text}`
+        rowElement.appendChild(columnTextElement)
+  
+        textQueueTable.appendChild(rowElement)
+      }
     }
 
-    const headRowElement = document.createElement('tr')
-
-    const headColumnNumberElement = document.createElement('th')
-    headColumnNumberElement.innerText = 'No'
-    headRowElement.appendChild(headColumnNumberElement)
-
-    const headColumnTextElement = document.createElement('th')
-    headColumnTextElement.innerText = 'テキスト'
-    headRowElement.appendChild(headColumnTextElement)
-
-    textQueueTable.appendChild(headRowElement)
-
-    for (const textQueueIndex in textQueue) {
-      const { text } = textQueue[textQueueIndex]
-      const rowElement = document.createElement('tr')
-
-      const columnNumberElement = document.createElement('th')
-      columnNumberElement.innerText = `${textQueueIndex}`
-      rowElement.appendChild(columnNumberElement)
+    // update textGeneratingQueueTable
+    {
+      while (textGeneratingQueueTable.lastChild) {
+        textGeneratingQueueTable.removeChild(textGeneratingQueueTable.lastChild)
+      }
   
-      const columnTextElement = document.createElement('th')
-      columnTextElement.innerText = `${text}`
-      rowElement.appendChild(columnTextElement)
-
-      textQueueTable.appendChild(rowElement)
+      const headRowElement = document.createElement('tr')
+  
+      const headColumnNumberElement = document.createElement('th')
+      headColumnNumberElement.innerText = 'No'
+      headRowElement.appendChild(headColumnNumberElement)
+  
+      const headColumnTextElement = document.createElement('th')
+      headColumnTextElement.innerText = 'テキスト'
+      headRowElement.appendChild(headColumnTextElement)
+  
+      textGeneratingQueueTable.appendChild(headRowElement)
+  
+      for (const textGeneratingQueueIndex in textGeneratingQueue) {
+        const { text } = textGeneratingQueue[textGeneratingQueueIndex]
+        const rowElement = document.createElement('tr')
+  
+        const columnNumberElement = document.createElement('th')
+        columnNumberElement.innerText = `${textGeneratingQueueIndex}`
+        rowElement.appendChild(columnNumberElement)
+    
+        const columnTextElement = document.createElement('th')
+        columnTextElement.innerText = `${text}`
+        rowElement.appendChild(columnTextElement)
+  
+        textGeneratingQueueTable.appendChild(rowElement)
+      }
     }
 
     // update audioQueueTable
-    while (audioQueueTable.lastChild) {
-      audioQueueTable.removeChild(audioQueueTable.lastChild)
-    }
-
-    const audioHeadRowElement = document.createElement('tr')
-
-    const audioHeadColumnNumberElement = document.createElement('th')
-    audioHeadColumnNumberElement.innerText = 'No'
-    audioHeadRowElement.appendChild(audioHeadColumnNumberElement)
-
-    const audioHeadColumnTextElement = document.createElement('th')
-    audioHeadColumnTextElement.innerText = 'テキスト'
-    audioHeadRowElement.appendChild(audioHeadColumnTextElement)
-
-    audioQueueTable.appendChild(audioHeadRowElement)
-
-    for (const audioQueueIndex in audioQueue) {
-      const { text } = audioQueue[audioQueueIndex]
-      const rowElement = document.createElement('tr')
-
-      const columnNumberElement = document.createElement('th')
-      columnNumberElement.innerText = `${audioQueueIndex}`
-      rowElement.appendChild(columnNumberElement)
+    {
+      while (audioQueueTable.lastChild) {
+        audioQueueTable.removeChild(audioQueueTable.lastChild)
+      }
   
-      const columnTextElement = document.createElement('th')
-      columnTextElement.innerText = `${text}`
-      rowElement.appendChild(columnTextElement)
-
-      audioQueueTable.appendChild(rowElement)
+      const headRowElement = document.createElement('tr')
+    
+      const headColumnNumberElement = document.createElement('th')
+      headColumnNumberElement.innerText = 'No'
+      headRowElement.appendChild(headColumnNumberElement)
+  
+      const headColumnTextElement = document.createElement('th')
+      headColumnTextElement.innerText = 'テキスト'
+      headRowElement.appendChild(headColumnTextElement)
+  
+      audioQueueTable.appendChild(headRowElement)
+  
+      for (const audioQueueIndex in audioQueue) {
+        const { text } = audioQueue[audioQueueIndex]
+        const rowElement = document.createElement('tr')
+  
+        const columnNumberElement = document.createElement('th')
+        columnNumberElement.innerText = `${audioQueueIndex}`
+        rowElement.appendChild(columnNumberElement)
+    
+        const columnTextElement = document.createElement('th')
+        columnTextElement.innerText = `${text}`
+        rowElement.appendChild(columnTextElement)
+  
+        audioQueueTable.appendChild(rowElement)
+      }
     }
+
+    // update audioPlayingQueueTable
+    {
+      while (audioPlayingQueueTable.lastChild) {
+        audioPlayingQueueTable.removeChild(audioPlayingQueueTable.lastChild)
+      }
+  
+      const headRowElement = document.createElement('tr')
+    
+      const headColumnNumberElement = document.createElement('th')
+      headColumnNumberElement.innerText = 'No'
+      headRowElement.appendChild(headColumnNumberElement)
+  
+      const headColumnTextElement = document.createElement('th')
+      headColumnTextElement.innerText = 'テキスト'
+      headRowElement.appendChild(headColumnTextElement)
+  
+      audioPlayingQueueTable.appendChild(headRowElement)
+  
+      for (const audioPlayingQueueIndex in audioPlayingQueue) {
+        const { text } = audioPlayingQueue[audioPlayingQueueIndex]
+        const rowElement = document.createElement('tr')
+  
+        const columnNumberElement = document.createElement('th')
+        columnNumberElement.innerText = `${audioPlayingQueueIndex}`
+        rowElement.appendChild(columnNumberElement)
+    
+        const columnTextElement = document.createElement('th')
+        columnTextElement.innerText = `${text}`
+        rowElement.appendChild(columnTextElement)
+  
+        audioPlayingQueueTable.appendChild(rowElement)
+      }
+    }
+
   })
 }, 100)
