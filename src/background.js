@@ -18,6 +18,29 @@ chrome.runtime.onInstalled.addListener(() => {
 let audioWindowId = null
 let audioTabId = null
 
+
+// update declarativeNetRequest rule
+chrome.declarativeNetRequest.updateDynamicRules({
+  removeRuleIds: [1],
+  addRules: [
+    {
+      id: 1,
+      priority: 1,
+      action: {
+        type: 'modifyHeaders',
+        requestHeaders: [
+          { 'header': 'Origin', 'operation': 'remove' },
+        ],
+      },
+      condition: {
+        urlFilter: '127.0.0.1:50021/*',
+        initiatorDomains: ['efjjflielakkkmlcepmgdeijagilmbac'], // chrome-extension://efjjflielakkkmlcepmgdeijagilmbac
+      },
+    },
+  ],
+})
+
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { method } = message
   console.log(`received message ${method} in background`)
