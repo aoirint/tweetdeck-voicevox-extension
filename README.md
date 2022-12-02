@@ -2,7 +2,7 @@
 
 TweetDeckのカラムに流れるツイートをVOICEVOXに読み上げさせるChrome拡張機能
 
-### 対応ブラウザ
+### 対応ブラウザ・マニフェスト
 
 - Google Chrome 108
 - Manifest V3
