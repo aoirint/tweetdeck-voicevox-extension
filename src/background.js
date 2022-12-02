@@ -12,9 +12,6 @@ let audioPlayingQueue = []
 
 let waitingPlayEnded = false
 
-chrome.runtime.onInstalled.addListener(() => {
-})
-
 let audioWindowId = null
 let audioTabId = null
 
@@ -40,6 +37,30 @@ chrome.declarativeNetRequest.updateDynamicRules({
   ],
 })
 
+
+// show action icon if the active tab is tweetdeck.twitter.com
+chrome.runtime.onInstalled.addListener((details) => {
+  // disable action by default
+  chrome.action.disable()
+
+  // enable action if tweetdeck.twitter.com
+  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+    chrome.declarativeContent.onPageChanged.addRules([
+      {
+        conditions: [
+          new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: 'tweetdeck.twitter.com',
+              schemes: ['https'],
+            },
+          }),
+        ],
+        actions: [ new chrome.declarativeContent.ShowAction() ],
+      },
+    ])
+    console.log('declarativeContent rule added')
+  })
+})
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const { method } = message
