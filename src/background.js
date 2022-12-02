@@ -1,6 +1,11 @@
 let knownTweetIdQueueSize = 100
 let knownTweetIdQueue = []
+
 let textQueue = []
+
+let audioQueueSize = 10
+let audioQueue = []
+let waitingPlayEnded = false
 
 chrome.runtime.onInstalled.addListener(() => {
 })
@@ -29,9 +34,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
 
       const { displayName, tweetText } = tweet
-      const text = `${displayName}さん ${tweetText}`
+      const tweetTextShort = tweetText.substring(0, 25) // limit 25 chars
+      const text = `${displayName}さん ${tweetTextShort}`
 
-      textQueue.push(text)
+      textQueue.push({
+        text,
+      })
     }
 
     // console.log(tweetQueue)
@@ -48,17 +56,32 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       audioWindowId = win.id
       audioTabId = win.tabs[0].id
     })
+  } else if (method === 'fetch-queue') {
+    sendResponse({
+      textQueue: textQueue.map(({ text }) => ({
+        text,
+      })),
+      audioQueue: audioQueue.map(({ text }) => ({
+        text,
+      }))
+    })
+  } else if (method === 'ended-play-audio') {
+    setTimeout(consumeAudioQueue, 100)
   }
 })
 
-// tweetQueue consumer
-function consumeTweetQueue() {
+// textQueue consumer
+function consumeTextQueue() {
   if (textQueue.length === 0) {
-    setTimeout(consumeTweetQueue, 100)
+    setTimeout(consumeTextQueue, 100)
+    return
+  }
+  if (audioQueueSize <= audioQueue.length) {
+    setTimeout(consumeTextQueue, 100)
     return
   }
 
-  const text = textQueue.shift()
+  const { text } = textQueue.shift()
 
   const audioQueryUrl = new URL('http://127.0.0.1:50021/audio_query')
   audioQueryUrl.searchParams.append('speaker', '1')
@@ -89,19 +112,39 @@ function consumeTweetQueue() {
       reader.onload = (event) => {
         const audioDataUrl = event.target.result
 
-        // TODO: play audio with blob
-        console.log(`audio tab id: ${audioTabId}`)
-        chrome.tabs.sendMessage(audioTabId, {
-          method: 'play-audio-data-url',
+        audioQueue.push({
+          text,
           audioDataUrl,
         })
+
+        setTimeout(consumeTextQueue, 100)
       }
       reader.readAsDataURL(blob)
     })
-
-    // setTimeout(consumeTweetQueue, 100)
   })
-
 }
 
-consumeTweetQueue()
+// audioQueue consumer
+function consumeAudioQueue() {
+  if (audioQueue.length === 0) {
+    setTimeout(consumeAudioQueue, 100)
+    return
+  }
+  if (audioTabId === null) {
+    setTimeout(consumeAudioQueue, 100)
+    return
+  }
+
+  const { audioDataUrl } = audioQueue.shift()
+
+  waitingPlayEnded = true
+  chrome.tabs.sendMessage(audioTabId, {
+    method: 'play-audio-data-url',
+    audioDataUrl,
+  })
+
+  // setTimeout(consumeAudioQueue, 100)
+}
+
+consumeTextQueue()
+consumeAudioQueue()
