@@ -1,4 +1,4 @@
-# tweetdeck-voicevox-extension
+# tweetdeck_voicevox_extension
 
 TweetDeckのカラムに流れるツイートをVOICEVOXに読み上げさせるChrome拡張機能
 
