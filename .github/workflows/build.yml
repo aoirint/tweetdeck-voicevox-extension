@@ -38,7 +38,7 @@ jobs:
           cp -r src/* "${DIR}/src/"
 
           mkdir "${DIR}/assets"
-          cp -r assets/*.png "${DIR}/assets/"
+          cp assets/*.png "${DIR}/assets/"
 
           cp manifest.json LICENSE README.md "${DIR}/"
 
