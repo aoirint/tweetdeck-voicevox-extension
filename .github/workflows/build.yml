@@ -1,0 +1,52 @@
+name: Build extension
+
+on:
+  release:
+    types:
+      - created
+
+env:
+  NAME: tweetdeck_voicevox_extension
+  VERSION: ${{ (github.event.release.tag_name != '' && github.event.release.tag_name) || '0.0.0' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Replace version
+        shell: bash
+        run: |
+          sed -i "s|\"version\": \"0.0.0\"|\"version\": \"${{ env.VERSION }}\"|" manifest.json
+
+      - name: Create asset name
+        id: create-asset-name
+        shell: bash
+        run: |
+          echo "asset_name=${{ env.NAME }}-${{ env.VERSION }}" >> $GITHUB_OUTPUT
+
+      - name: Create zip artifact
+        shell: bash
+        run: |-
+          DIR="${{ steps.create-asset-name.outputs.asset_name }}"
+          mkdir "${DIR}"
+
+          # copy extension source
+          mkdir "${DIR}/src"
+          cp -r src/* "${DIR}/"
+
+          mkdir "${DIR}/assets"
+          cp -r assets/*.png "${DIR}/assets/"
+
+          cp manifest.json LICENSE README.md "${DIR}/"
+
+          zip -r "${DIR}.zip" "${DIR}"
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}
+          target_commitish: ${{ github.sha }}
+          files: ${{ steps.create-asset-name.outputs.asset_name }}.zip
