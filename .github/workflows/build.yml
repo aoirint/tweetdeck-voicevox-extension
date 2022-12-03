@@ -35,7 +35,7 @@ jobs:
 
           # copy extension source
           mkdir "${DIR}/src"
-          cp -r src/* "${DIR}/"
+          cp -r src/* "${DIR}/src/"
 
           mkdir "${DIR}/assets"
           cp -r assets/*.png "${DIR}/assets/"
