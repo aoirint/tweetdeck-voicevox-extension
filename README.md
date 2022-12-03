@@ -2,6 +2,8 @@
 
 TweetDeckのカラムに流れるツイートをVOICEVOXに読み上げさせるChrome拡張機能
 
+- Chrome Web Store: <https://chrome.google.com/webstore/detail/cekkbogfkgichpacgbdddchpahpkmldl>
+
 ### 対応ブラウザ・拡張機能マニフェスト
 
 - Google Chrome 108
