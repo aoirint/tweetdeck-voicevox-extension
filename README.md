@@ -15,5 +15,5 @@ Chromeでは、音声再生に利用できるoffscreen機能の実装が検討�
 
 ### 対応VOICEVOX
 
-- VOICEVOX 0.13.3
-- VOICEVOX ENGINE 0.14.0-preview.4 （CORS対応）
+- VOICEVOX 0.13.x
+- VOICEVOX 0.14.x （CORS対応）
