@@ -1,5 +1,7 @@
 # tweetdeck_voicevox_extension
 
+**(2023-09-22) TweetDeck 1.0の提供終了・X Pro（TweetDeck 2.0）への移行に伴い、メンテナンスを終了します。**
+
 TweetDeckのカラムに流れるツイートをVOICEVOXに読み上げさせるChrome拡張機能
 
 - Chrome Web Store: <https://chrome.google.com/webstore/detail/cekkbogfkgichpacgbdddchpahpkmldl>
